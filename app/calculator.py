@@ -1,3 +1,5 @@
+from app.utils import formatar_moeda
+
 def calcular_financiamento(tipo, valor_imovel, entrada, prazo, juros_anual, tr_anual, amort_extra):
     valor_financiado = valor_imovel - entrada
     saldo_devedor = valor_financiado
@@ -46,7 +48,13 @@ def calcular_financiamento(tipo, valor_imovel, entrada, prazo, juros_anual, tr_a
             else:
                 saldo_devedor -= amortizacao
 
-            tabela.append([f'{mes}/2025', f'{parcela:.2f}', f'{amortizacao:.2f}', f'{juros:.2f}', f'{saldo_devedor:.2f}'])
+            tabela.append([
+                f'{mes}/2025',
+                formatar_moeda(parcela),
+                formatar_moeda(amortizacao),
+                formatar_moeda(juros),
+                formatar_moeda(saldo_devedor)
+            ])
             saldo.append(saldo_devedor)
 
             mes += 1
