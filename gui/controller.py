@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from app.calculator import exemplo_calculo
+from app.calculator import calcular_financiamento
 from app.plots import plot_exemplo
 from gui.layout import draw_plot
 
@@ -20,8 +20,8 @@ def run_event_loop(window):
             tr = float(values['-TR-'])
             extra = float(values['-EXTRA-'])
 
-            # Exemplo de retorno de cálculo (temporário)
-            tabela, saldo = exemplo_calculo(prazo)
+            # Retorno de cálculo
+            tabela, saldo = calcular_financiamento(tipo, valor_imovel, entrada, prazo, juros, tr, extra)
 
             # Atualizar tabela
             window['-TABELA-'].update(values=tabela)

@@ -2,11 +2,25 @@ import PySimpleGUI as sg
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+# Armazenar referência para o canvas antigo
+canvas_refs = {}
+
 # Função para embutir o gráfico na interface
 def draw_plot(canvas_elem, figure):
+    key = canvas_elem.Key
+
+    # Se já existir um canvas antigo, limpa
+    if key in canvas_refs:
+        canvas_refs[key].get_tk_widget().forget()
+        canvas_refs[key].figure.clf()
+
     canvas = FigureCanvasTkAgg(figure, canvas_elem.Widget)
     canvas.draw()
     canvas.get_tk_widget().pack(side='top', fill='both', expand=1)
+
+    # Salvar referência
+    canvas_refs[key] = canvas
+
     return canvas
 
 def create_main_window():
@@ -16,14 +30,15 @@ def create_main_window():
     input_column = [
         [sg.Text('Tipo de Financiamento')],
         [sg.Combo(['SAC', 'PRICE'], key='-TIPO-', default_value='SAC')],
-        [sg.Text('Valor do Imóvel'), sg.Input(key='-VALOR-')],
-        [sg.Text('Valor de Entrada'), sg.Input(key='-ENTRADA-')],
+        [sg.Text('Valor do Imóvel (R$)'), sg.Input(key='-VALOR-')],
+        [sg.Text('Valor de Entrada (R$)'), sg.Input(key='-ENTRADA-')],
         [sg.Text('Prazo (meses)'), sg.Input(key='-PRAZO-')],
         [sg.Text('Taxa de Juros Anual (%)'), sg.Input(key='-JUROS-')],
         [sg.Text('Taxa TR Anual (%)'), sg.Input(key='-TR-')],
-        [sg.Text('Amortização Extraordinária Mensal'), sg.Input(key='-EXTRA-')],
+        [sg.Text('Amortização Extraordinária (R$/mês)'), sg.Input(key='-EXTRA-')],
         [sg.Button('Calcular', size=(15, 1)), sg.Button('Sair', size=(15, 1))],
     ]
+
 
     # Coluna da lista de parcelas
     parcela_column = [
