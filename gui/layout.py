@@ -40,7 +40,7 @@ def create_main_window():
         [sg.Text('Prazo (meses)', size=(28, 1), justification='left'),
          sg.Input(key='-PRAZO-', size=(15, 1), default_text='0')],
 
-        [sg.Text('Taxa de Juros Anual (%)', size=(28, 1), justification='left'),
+        [sg.Text('Taxa de Juros Efetiva Anual (%)', size=(28, 1), justification='left'),
          sg.Input(key='-JUROS-', size=(15, 1), default_text='0')],
 
         [sg.Text('Taxa TR Anual (%)', size=(28, 1), justification='left'),

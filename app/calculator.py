@@ -7,7 +7,10 @@ def calcular_financiamento(tipo, valor_imovel, entrada, prazo, juros_anual, tr_a
     tabela = []
     saldo = []
 
-    juros_mensal = juros_anual / 100 / 12
+    # Ajuste para taxa efetiva mensal a partir da taxa efetiva anual
+    juros_anual_efetiva = juros_anual / 100
+    juros_mensal = (1 + juros_anual_efetiva) ** (1/12) - 1
+
     tr_mensal = tr_anual / 100 / 12  # TR mensal calculada mas atualmente não usada
 
     ano = datetime.now().year
@@ -60,21 +63,26 @@ def calcular_financiamento(tipo, valor_imovel, entrada, prazo, juros_anual, tr_a
             juros = saldo_devedor * juros_mensal
             amortizacao = parcela_fixa - juros
 
-            # Aplicar amortização extra separadamente
-            saldo_devedor -= (amortizacao + amort_extra)
+            # Somar amortização extraordinária à amortização do mês
+            amortizacao_total = amortizacao + amort_extra
 
-            # Correção caso amortização final ultrapasse saldo
-            if saldo_devedor < 0:
+            # Ajuste para não amortizar além do saldo
+            if saldo_devedor - amortizacao_total < 0:
+                amortizacao_total = saldo_devedor
                 saldo_devedor = 0
+            else:
+                saldo_devedor -= amortizacao_total
 
-            # Acumular totais com parcela fixa
-            total_pago += parcela_fixa
+            parcela = amortizacao + juros  # parcela fixa, não considera extra na parcela
+
+            # Acumular totais: parcela fixa + amort_extra (que é antecipação, mas paga no mês)
+            total_pago += parcela + amort_extra
             total_juros += juros
 
             tabela.append([
                 f'{mes:02d}/{ano}',
-                formatar_moeda(parcela_fixa),
-                formatar_moeda(amortizacao + amort_extra),
+                formatar_moeda(parcela + amort_extra),
+                formatar_moeda(amortizacao_total),
                 formatar_moeda(juros),
                 formatar_moeda(saldo_devedor)
             ])
