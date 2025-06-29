@@ -28,17 +28,29 @@ def create_main_window():
 
     # Coluna de entrada de dados
     input_column = [
-        [sg.Text('Tipo de Financiamento')],
-        [sg.Combo(['SAC', 'PRICE'], key='-TIPO-', default_value='SAC')],
-        [sg.Text('Valor do Imóvel (R$)'), sg.Input(key='-VALOR-')],
-        [sg.Text('Valor de Entrada (R$)'), sg.Input(key='-ENTRADA-')],
-        [sg.Text('Prazo (meses)'), sg.Input(key='-PRAZO-')],
-        [sg.Text('Taxa de Juros Anual (%)'), sg.Input(key='-JUROS-')],
-        [sg.Text('Taxa TR Anual (%)'), sg.Input(key='-TR-')],
-        [sg.Text('Amortização Extraordinária (R$/mês)'), sg.Input(key='-EXTRA-')],
+        [sg.Text('Tipo de Financiamento', size=(28, 1), justification='left'),
+         sg.Combo(['SAC', 'PRICE'], key='-TIPO-', default_value='SAC', size=(10, 1))],
+        
+        [sg.Text('Valor do Imóvel (R$)', size=(28, 1), justification='left'),
+         sg.Input(key='-VALOR-', size=(15, 1), default_text='R$ 0,00')],
+        
+        [sg.Text('Valor de Entrada (R$)', size=(28, 1), justification='left'),
+         sg.Input(key='-ENTRADA-', size=(15, 1), default_text='R$ 0,00')],
+
+        [sg.Text('Prazo (meses)', size=(28, 1), justification='left'),
+         sg.Input(key='-PRAZO-', size=(15, 1), default_text='0')],
+
+        [sg.Text('Taxa de Juros Anual (%)', size=(28, 1), justification='left'),
+         sg.Input(key='-JUROS-', size=(15, 1), default_text='0')],
+
+        [sg.Text('Taxa TR Anual (%)', size=(28, 1), justification='left'),
+         sg.Input(key='-TR-', size=(15, 1), default_text='0')],
+
+        [sg.Text('Amortização Extraordinária (R$/mês)', size=(28, 1), justification='left'),
+         sg.Input(key='-EXTRA-', size=(15, 1), default_text='R$ 0,00')],
+
         [sg.Button('Calcular', size=(15, 1)), sg.Button('Sair', size=(15, 1))],
     ]
-
 
     # Coluna da lista de parcelas
     parcela_column = [
@@ -51,6 +63,15 @@ def create_main_window():
                   num_rows=20,
                   justification='center',
                   enable_events=True)],
+        
+        [sg.HorizontalSeparator()],
+
+        # Adicionando o resumo abaixo da tabela
+        [sg.Text('Resumo do Financiamento', font=('Any', 14, 'bold'))],
+        [sg.Text('Valor Financiado: ', size=(20, 1)), sg.Text('', key='-RESUMO_VALOR-', size=(20, 1))],
+        [sg.Text('Valor Total Pago: ', size=(20, 1)), sg.Text('', key='-RESUMO_TOTAL-', size=(20, 1))],
+        [sg.Text('Valor Total de Juros: ', size=(20, 1)), sg.Text('', key='-RESUMO_JUROS-', size=(20, 1))],
+        [sg.Text('Tempo de Pagamento: ', size=(20, 1)), sg.Text('', key='-RESUMO_TEMPO-', size=(20, 1))]
     ]
 
     # Coluna do gráfico
@@ -64,7 +85,12 @@ def create_main_window():
          sg.VSeperator(),
          sg.Column(parcela_column, element_justification='center', pad=(10, 10)),
          sg.VSeperator(),
-         sg.Column(plot_column, element_justification='center', pad=(10, 10))]
+         sg.Column(plot_column, element_justification='center', pad=(10, 10))],
     ]
 
-    return sg.Window('Calculadora de Financiamento Imobiliário', layout, finalize=True)
+    window = sg.Window('Calculadora de Financiamento Imobiliário',
+                       layout,
+                       finalize=True,
+                       resizable=True)
+    window.Maximize()
+    return window
